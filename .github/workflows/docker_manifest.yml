@@ -1,0 +1,72 @@
+name: Build container manifest
+on:
+  workflow_call:
+    inputs:
+      pio_platform:
+        description: PlatformIO platform to target
+        required: true
+        type: string
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+permissions:
+  contents: read
+  packages: write
+  id-token: write
+  attestations: write
+
+jobs:
+  docker-amd64:
+    uses: ./.github/workflows/docker_build.yml
+    with:
+      pio_platform: ${{ inputs.pio_platform }}
+      platform: linux/amd64
+      runs-on: ubuntu-24.04
+      push: true
+    secrets: inherit
+
+  docker-arm64:
+    uses: ./.github/workflows/docker_build.yml
+    with:
+      pio_platform: ${{ inputs.pio_platform }}
+      platform: linux/arm64
+      runs-on: ubuntu-24.04-arm
+      push: true
+    secrets: inherit
+
+  docker-manifest:
+    needs:
+      - docker-amd64
+      - docker-arm64
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Docker Login GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Docker meta
+        id: meta_docker
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            master-${{ inputs.pio_platform }}
+          flavor: latest=false
+
+      - name: Create Docker manifest
+        id: manifest_docker
+        uses: int128/docker-manifest-create-action@v2
+        with:
+          tags: |
+            ${{ steps.meta_docker.outputs.tags }}
+          push: true
+          sources: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ needs.docker-amd64.outputs.digest }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ needs.docker-arm64.outputs.digest }}

@@ -1,0 +1,48 @@
+name: Setup Build Variant Composite Action
+description: Variant build actions for Meshtastic PlatformIO steps
+author: meshtastic
+
+inputs:
+  pio_platform:
+    description: The PlatformIO platform to build (esp32, nrf52, portduino, rp2xx0, stm32wl)
+    required: true
+  pio_env:
+    description: The PlatformIO environment to build
+    required: true
+  pio_target:
+    description: The PlatformIO run target (default is 'build')
+    required: false
+    default: "build"
+  ota_firmware_source:
+    description: The source binary for OTA firmware
+    required: false
+    default: ""
+  ota_firmware_target:
+    description: The target binary for OTA firmware
+    required: false
+    default: ""
+
+runs:
+  using: composite
+  steps:
+    - id: build_meshtastic
+      run: |
+        docker run --rm \
+          --env GITHUB_ACTIONS \
+          --env XDG_CACHE_HOME \
+          --env MT_ENV \
+          --env MT_PLATFORM \
+          --env MT_TARGET \
+          --env MT_OTA_FIRMWARE_SOURCE \
+          --env MT_OTA_FIRMWARE_TARGET \
+          --env PLATFORMIO_BUILD_DIR \
+          -v $GITHUB_WORKSPACE:/workspace \
+          ghcr.io/meshtastic/gh-action-firmware:master-${{ inputs.pio_platform }}
+      shell: bash
+      env:
+        MT_ENV: ${{ inputs.pio_env }}
+        MT_PLATFORM: ${{ inputs.pio_platform }}
+        MT_TARGET: ${{ inputs.pio_target }}
+        MT_OTA_FIRMWARE_SOURCE: ${{ inputs.ota_firmware_source }}
+        MT_OTA_FIRMWARE_TARGET: ${{ inputs.ota_firmware_target }}
+        PLATFORMIO_BUILD_DIR: /workspace/.pio/build

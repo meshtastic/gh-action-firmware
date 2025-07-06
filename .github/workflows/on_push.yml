@@ -1,0 +1,25 @@
+name: Build
+on:
+  push:
+    # build and push anytime commits are pushed/merged
+    branches:
+      - main
+  schedule:
+    # build and push weekly
+    - cron: '0 5 * * 5'
+
+permissions:
+  contents: read
+  packages: write
+  id-token: write
+  attestations: write
+
+jobs:
+  docker-platforms:
+    strategy:
+      matrix:
+        pio_platform: [esp32, nrf52, portduino, rp2xx0, stm32wl]
+    uses: ./.github/workflows/docker_manifest.yml
+    with:
+      pio_platform: ${{ matrix.pio_platform }}
+    secrets: inherit
