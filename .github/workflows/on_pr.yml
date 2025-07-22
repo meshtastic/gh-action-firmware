@@ -1,0 +1,33 @@
+name: Build PR
+on:
+  pull_request:
+
+permissions:
+  contents: read
+  packages: write
+  id-token: write
+  attestations: write
+
+jobs:
+  docker-amd64:
+    strategy:
+      fail-fast: false
+      matrix:
+        pio_platform:
+          - esp32
+          - esp32c3
+          - esp32c6
+          - esp32s2
+          - esp32s3
+          - native
+          - nrf52840
+          - rp2040
+          - rp2350
+          - stm32
+    uses: ./.github/workflows/docker_build.yml
+    with:
+      pio_platform: ${{ matrix.pio_platform }}
+      platform: linux/amd64
+      runs-on: ubuntu-24.04
+      push: false
+    secrets: inherit

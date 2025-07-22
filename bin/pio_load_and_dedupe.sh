@@ -7,7 +7,7 @@ to_build=$(
     platformio project config --json-output |
     jq -r ".[] | \
     select(.[0] | type==\"string\" and startswith(\"env:\")) | \
-    select((.[1][] | select(.[0]==\"build_flags\") | .[1][] | index(\"-Isrc/platform/$PLATFORM_SRC\"))) | \
+    select((.[1][] | select(.[0]==\"build_flags\") | .[1][] | test(\"-I\\\s?variants/$PLATFORM_SRC/\"))) | \
     .[0] | ltrimstr(\"env:\")"
 )
 
