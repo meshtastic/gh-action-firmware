@@ -2,7 +2,7 @@
 set -euo pipefail
 
 PLATFORM_SRC="$1"
-# Parse platformio project output for all environments that include the specified platform source directory
+# Parse PlatformIO project output for all environments that include the specified platform source directory
 to_build=$(
     platformio project config --json-output |
     jq -r ".[] | \
@@ -15,11 +15,16 @@ echo "Gathering environments for platform: $PLATFORM_SRC"
 
 echo "$to_build" | while read -r env; do
     echo "################################################"
-    echo "Loading targets for environment: $env"
+    echo "▶️ Loading pkgs for env: $env"
     echo "################################################"
+    # Install packages for building the PlatformIO environment
     pio pkg install --environment "$env"
+    # Install additional tools
+    # `--no-save` prevents this from modifying platformio.ini
+    pio pkg install --environment "$env" --no-save \
+        --tool platformio/tool-cppcheck
 done
-echo "All targets loaded successfully."
+echo "All packages loaded successfully."
 
 # Replace duplicate files in the core directory with hard links
 echo "Deduplicating $PLATFORMIO_CORE_DIR"
