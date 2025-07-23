@@ -22,7 +22,8 @@ echo "$to_build" | while read -r env; do
     # Install additional tools
     # `--no-save` prevents this from modifying platformio.ini
     pio pkg install --environment "$env" --no-save \
-        --tool platformio/tool-cppcheck
+        --tool platformio/tool-cppcheck \
+        --tool platformio/tool-mklittlefs
 done
 echo "All packages loaded successfully."
 
