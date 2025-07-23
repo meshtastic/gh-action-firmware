@@ -1,4 +1,4 @@
-name: Build
+name: Build Release
 on:
   push:
     # build and push anytime commits are pushed/merged
@@ -18,8 +18,19 @@ permissions:
 jobs:
   docker-platforms:
     strategy:
+      fail-fast: false
       matrix:
-        pio_platform: [esp32, nrf52, portduino, rp2xx0, stm32wl]
+        pio_platform:
+          - esp32
+          - esp32c3
+          - esp32c6
+          - esp32s2
+          - esp32s3
+          - native
+          - nrf52840
+          - rp2040
+          - rp2350
+          - stm32
     uses: ./.github/workflows/docker_manifest.yml
     with:
       pio_platform: ${{ matrix.pio_platform }}
