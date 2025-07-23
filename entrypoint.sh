@@ -12,6 +12,18 @@ MT_PLATFORM=${MT_PLATFORM}
 MT_OTA_FIRMWARE_SOURCE=${MT_OTA_FIRMWARE_SOURCE:-""}
 MT_OTA_FIRMWARE_TARGET=${MT_OTA_FIRMWARE_TARGET:-""}
 
+# Massage platform values to build_script names
+if [[ "$MT_PLATFORM" == esp32* ]]; then
+    MT_PLATFORM="esp32"
+elif [[ "$MT_PLATFORM" == nrf52* ]]; then
+    MT_PLATFORM="nrf52"
+elif [[ "$MT_PLATFORM" == rp2040 ]] || [[ "$MT_PLATFORM" == rp2350 ]]; then
+    MT_PLATFORM="rp2xx0"
+elif [[ "$MT_PLATFORM" == stm32 ]]; then
+    # Remove when stm32 has been fully renamed to stm32wl
+    MT_PLATFORM="stm32wl"
+fi
+
 # Build
 if [ "$MT_TARGET" = "build" ]; then
     echo "Building PlatformIO environment: $MT_ENV"
