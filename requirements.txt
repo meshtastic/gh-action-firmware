@@ -2,5 +2,4 @@ platformio==6.1.18
 nanopb==0.4.9.1
 grpcio-tools==1.73.1
 adafruit-nrfutil==0.5.3.post16
-intelhex==2.3.0
 meshtastic==2.6.4

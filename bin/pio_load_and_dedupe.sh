@@ -13,17 +13,20 @@ to_build=$(
 
 echo "Gathering environments for platform: $PLATFORM_SRC"
 
+echo "Installing global PlatformIO tools"
+# Install additional tools
+# `--no-save` prevents this from modifying platformio.ini
+pio pkg install --global --no-save \
+    --tool platformio/tool-cppcheck \
+    --tool platformio/tool-mklittlefs \
+    --tool platformio/tool-esptoolpy
+
 echo "$to_build" | while read -r env; do
     echo "################################################"
     echo "▶️ Loading pkgs for env: $env"
     echo "################################################"
     # Install packages for building the PlatformIO environment
     pio pkg install --environment "$env"
-    # Install additional tools
-    # `--no-save` prevents this from modifying platformio.ini
-    pio pkg install --environment "$env" --no-save \
-        --tool platformio/tool-cppcheck \
-        --tool platformio/tool-mklittlefs
 done
 echo "All packages loaded successfully."
 
