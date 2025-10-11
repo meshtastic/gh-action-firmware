@@ -1,5 +1,5 @@
 # Base image
-FROM python:3.13-trixie AS base
+FROM python:3.14-trixie AS base
 ENV PIP_ROOT_USER_ACTION=ignore
 ENV DEBIAN_FRONTEND=noninteractive
 
