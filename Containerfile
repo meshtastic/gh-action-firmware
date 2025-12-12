@@ -1,5 +1,6 @@
 # Base image
-FROM python:3.14-trixie AS base
+# !! espressif32 platform does not yet support python 3.14
+FROM python:3.13-trixie AS base
 ENV PIP_ROOT_USER_ACTION=ignore
 ENV DEBIAN_FRONTEND=noninteractive
 
