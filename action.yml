@@ -12,13 +12,15 @@ inputs:
   pio_target:
     description: The PlatformIO run target (default is 'build')
     required: false
-    default: "build"
+    default: build
+  # Deprecated
   ota_firmware_source:
-    description: The source binary for OTA firmware
+    description: Deprecated - The source binary for OTA firmware
     required: false
     default: ""
+  # Deprecated
   ota_firmware_target:
-    description: The target binary for OTA firmware
+    description: Deprecated - The target binary for OTA firmware
     required: false
     default: ""
 
@@ -33,8 +35,6 @@ runs:
           --env MT_ENV \
           --env MT_PLATFORM \
           --env MT_TARGET \
-          --env MT_OTA_FIRMWARE_SOURCE \
-          --env MT_OTA_FIRMWARE_TARGET \
           --env PLATFORMIO_BUILD_DIR \
           -v $GITHUB_WORKSPACE:/workspace \
           ghcr.io/meshtastic/gh-action-firmware:master-${{ inputs.pio_platform }}
@@ -43,6 +43,4 @@ runs:
         MT_ENV: ${{ inputs.pio_env }}
         MT_PLATFORM: ${{ inputs.pio_platform }}
         MT_TARGET: ${{ inputs.pio_target }}
-        MT_OTA_FIRMWARE_SOURCE: ${{ inputs.ota_firmware_source }}
-        MT_OTA_FIRMWARE_TARGET: ${{ inputs.ota_firmware_target }}
         PLATFORMIO_BUILD_DIR: /workspace/.pio/build
