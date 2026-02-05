@@ -1,4 +1,4 @@
-platformio==6.1.18
+platformio==6.1.19
 nanopb==0.4.9.1
 grpcio-tools==1.76.0
 adafruit-nrfutil==0.5.3.post16
