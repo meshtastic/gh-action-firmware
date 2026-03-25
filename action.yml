@@ -23,6 +23,10 @@ inputs:
     description: Deprecated - The target binary for OTA firmware
     required: false
     default: ""
+  pio_token:
+    description: PlatformIO token - Use to help with rate-limiting issues on PlatformIO's registry (optional)
+    required: false
+    default: ""
 
 runs:
   using: composite
@@ -35,7 +39,8 @@ runs:
           --env MT_ENV \
           --env MT_PLATFORM \
           --env MT_TARGET \
-          --env PLATFORMIO_BUILD_DIR \
+          --env MT_VERBOSE \
+          --env PIO_TOKEN \
           -v $GITHUB_WORKSPACE:/workspace \
           ghcr.io/meshtastic/gh-action-firmware:master-${{ inputs.pio_platform }}
       shell: bash
@@ -43,4 +48,6 @@ runs:
         MT_ENV: ${{ inputs.pio_env }}
         MT_PLATFORM: ${{ inputs.pio_platform }}
         MT_TARGET: ${{ inputs.pio_target }}
-        PLATFORMIO_BUILD_DIR: /workspace/.pio/build
+        # Enable verbose output if "debug logging" is enabled for the run.
+        MT_VERBOSE: ${{ runner.debug || 0 }}
+        PIO_TOKEN: ${{ inputs.pio_token }}

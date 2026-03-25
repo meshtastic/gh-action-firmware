@@ -9,6 +9,22 @@ XDG_CACHE_HOME=${XDG_CACHE_HOME:-$HOME/.cache}
 MT_TARGET=${MT_TARGET:-"build"}
 MT_ENV=${MT_ENV}
 MT_PLATFORM=${MT_PLATFORM}
+MT_VERBOSE=${MT_VERBOSE:-0}
+PIO_TOKEN=${PIO_TOKEN:-}
+
+# PlatformIO settings
+export PLATFORMIO_BUILD_DIR="/workspace/.pio/build"
+export PLATFORMIO_SETTING_ENABLE_TELEMETRY=0
+export PLATFORMIO_SETTING_CHECK_PLATFORMIO_INTERVAL=3650
+export PLATFORMIO_SETTING_CHECK_PRUNE_SYSTEM_THRESHOLD=10240
+# Use PlatformIO Token if provided.
+if [[ -n "${PIO_TOKEN}" ]]; then
+    export PLATFORMIO_AUTH_TOKEN="${PIO_TOKEN}"
+fi
+# Conditionally enable verbose output.
+if [[ "${MT_VERBOSE}" == "1" ]]; then
+    export PLATFORMIO_SETTING_FORCE_VERBOSE=1
+fi
 
 # Massage platform values to build_script names
 if [[ "$MT_PLATFORM" == esp32* ]]; then

@@ -19,6 +19,7 @@ RUN pip install -r /tmp/requirements.txt
 # PlatformIO Configuration
 ENV PLATFORMIO_CORE_DIR=/pio/core
 ENV PLATFORMIO_WORKSPACE_DIR=/pio/workspace
+ENV PLATFORMIO_SETTING_ENABLE_TELEMETRY=0
 
 # Gather PlatformIO dependencies in a separate stage
 FROM base AS pio_deps
