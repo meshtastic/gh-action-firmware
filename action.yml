@@ -36,6 +36,7 @@ runs:
         docker run --rm \
           --env GITHUB_ACTIONS \
           --env XDG_CACHE_HOME \
+          --env PLATFORMIO_BUILD_DIR \
           --env MT_ENV \
           --env MT_PLATFORM \
           --env MT_TARGET \
@@ -45,6 +46,7 @@ runs:
           ghcr.io/meshtastic/gh-action-firmware:master-${{ inputs.pio_platform }}
       shell: bash
       env:
+        PLATFORMIO_BUILD_DIR: /workspace/.pio/build
         MT_ENV: ${{ inputs.pio_env }}
         MT_PLATFORM: ${{ inputs.pio_platform }}
         MT_TARGET: ${{ inputs.pio_target }}
