@@ -49,5 +49,4 @@ jobs:
 |`pio_platform`|PlatformIO Platform|Yes||
 |`pio_env`|PlatformIO "environment" (board)|Yes||
 |`pio_target`|PlatformIO target operation|No|`build`|
-|`ota_firmware_source`|OTA Binary to use (ESP32-only)|No||
-|`ota_firmware_target`|OTA Binary destination (ESP32-Only)|No||
+|`pio_token`|PlatformIO token - Use to help with rate-limiting issues on PlatformIO's registry|No||
