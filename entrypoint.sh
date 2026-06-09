@@ -45,4 +45,8 @@ if [ "$MT_TARGET" = "build" ]; then
 # Check
 elif [ "$MT_TARGET" = "check" ]; then
     /workspace/bin/check-all.sh "$MT_ENV"
+else
+    echo "Unknown MT_TARGET: ${MT_TARGET}"
+    echo "Passing directly to platformio"
+    pio run -e "${MT_ENV}" --target "${MT_TARGET}"
 fi
