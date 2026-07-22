@@ -20,6 +20,10 @@ on:
         description: PlatformIO platform to target
         required: true
         type: string
+      meshtastic_branch:
+        description: Meshtastic branch to fetch dependencies from
+        required: true
+        type: string
     outputs:
       digest:
         description: Digest of built image
@@ -74,7 +78,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            GHA-master-${{ inputs.pio_platform }}-${{ steps.sanitize_platform.outputs.cleaned_platform }}
+            GHA-${{ inputs.meshtastic_branch }}-${{ inputs.pio_platform }}-${{ steps.sanitize_platform.outputs.cleaned_platform }}
           flavor: latest=false
 
       - name: Docker build and push
@@ -88,3 +92,4 @@ jobs:
           platforms: ${{ inputs.platform }}
           build-args: |
             PIO_PLATFORM=${{ inputs.pio_platform }}
+            DEPS_FROM_REF=${{ inputs.meshtastic_branch }}

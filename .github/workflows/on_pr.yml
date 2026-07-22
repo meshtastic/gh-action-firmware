@@ -30,4 +30,5 @@ jobs:
       platform: linux/amd64
       runs-on: ubuntu-24.04
       push: false
+      meshtastic_branch: develop
     secrets: inherit

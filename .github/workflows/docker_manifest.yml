@@ -6,6 +6,10 @@ on:
         description: PlatformIO platform to target
         required: true
         type: string
+      meshtastic_branch:
+        description: Meshtastic branch to fetch dependencies from
+        required: true
+        type: string
 
 env:
   REGISTRY: ghcr.io
@@ -25,6 +29,7 @@ jobs:
       platform: linux/amd64
       runs-on: ubuntu-24.04
       push: true
+      meshtastic_branch: ${{ inputs.meshtastic_branch }}
     secrets: inherit
 
   docker-arm64:
@@ -34,6 +39,7 @@ jobs:
       platform: linux/arm64
       runs-on: ubuntu-24.04-arm
       push: true
+      meshtastic_branch: ${{ inputs.meshtastic_branch }}
     secrets: inherit
 
   docker-manifest:
@@ -57,7 +63,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            master-${{ inputs.pio_platform }}
+            ${{ inputs.meshtastic_branch }}-${{ inputs.pio_platform }}
           flavor: latest=false
 
       - name: Create Docker manifest
