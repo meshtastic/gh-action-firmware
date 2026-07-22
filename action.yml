@@ -27,6 +27,10 @@ inputs:
     description: PlatformIO token - Use to help with rate-limiting issues on PlatformIO's registry (optional)
     required: false
     default: ""
+  meshtastic_branch:
+    description: The Meshtastic branch (container) to use for the build.
+    required: false
+    default: master
 
 runs:
   using: composite
@@ -43,7 +47,7 @@ runs:
           --env MT_VERBOSE \
           --env PIO_TOKEN \
           -v $GITHUB_WORKSPACE:/workspace \
-          ghcr.io/meshtastic/gh-action-firmware:develop-${{ inputs.pio_platform }}
+          ghcr.io/meshtastic/gh-action-firmware:${{ inputs.meshtastic_branch }}-${{ inputs.pio_platform }}
       shell: bash
       env:
         PLATFORMIO_BUILD_DIR: /workspace/.pio/build
