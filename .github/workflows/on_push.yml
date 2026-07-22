@@ -31,7 +31,11 @@ jobs:
           - rp2040
           - rp2350
           - stm32
+        mt_branch:
+          - master
+          - develop
     uses: ./.github/workflows/docker_manifest.yml
     with:
       pio_platform: ${{ matrix.pio_platform }}
+      meshtastic_branch: ${{ matrix.mt_branch }}
     secrets: inherit
