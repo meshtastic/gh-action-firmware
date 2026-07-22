@@ -27,9 +27,11 @@ echo "$to_build" | while read -r env; do
 done
 echo "All packages loaded successfully."
 
-# Replace duplicate files in the core directory with hard links
-echo "Deduplicating $PLATFORMIO_CORE_DIR"
-jdupes --quiet -r -L "$PLATFORMIO_CORE_DIR"
+if [[ "$PLATFORM_SRC" != esp32* ]]; then
+    # Replace duplicate files in the core directory with hard links
+    echo "Deduplicating $PLATFORMIO_CORE_DIR"
+    jdupes --quiet -r -L "$PLATFORMIO_CORE_DIR"
+fi
 
 # Replace duplicate files in the workspace directory with hard links
 echo "Deduplicating $PLATFORMIO_WORKSPACE_DIR"
