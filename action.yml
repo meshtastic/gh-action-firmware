@@ -43,7 +43,7 @@ runs:
           --env MT_VERBOSE \
           --env PIO_TOKEN \
           -v $GITHUB_WORKSPACE:/workspace \
-          ghcr.io/meshtastic/gh-action-firmware:master-${{ inputs.pio_platform }}
+          ghcr.io/meshtastic/gh-action-firmware:develop-${{ inputs.pio_platform }}
       shell: bash
       env:
         PLATFORMIO_BUILD_DIR: /workspace/.pio/build
