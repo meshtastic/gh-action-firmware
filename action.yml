@@ -30,7 +30,7 @@ inputs:
   meshtastic_branch:
     description: The Meshtastic branch (container) to use for the build.
     required: false
-    default: master
+    default: develop
 
 runs:
   using: composite

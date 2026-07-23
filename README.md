@@ -50,4 +50,4 @@ jobs:
 |`pio_env`|PlatformIO "environment" (board)|Yes||
 |`pio_target`|PlatformIO target operation|No|`build`|
 |`pio_token`|PlatformIO token - Use to help with rate-limiting issues on PlatformIO's registry|No||
-|`meshtastic_branch`|The Meshtastic branch (container) to use for the build.|No|`master`|
+|`meshtastic_branch`|The Meshtastic branch (container) to use for the build.|No|`develop`|
