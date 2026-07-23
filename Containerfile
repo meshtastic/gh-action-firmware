@@ -25,7 +25,7 @@ ENV CI=true
 # Gather PlatformIO dependencies in a separate stage
 FROM base AS pio_deps
 ARG DEPS_FROM_REPO="https://github.com/meshtastic/firmware.git"
-ARG DEPS_FROM_REF="master"
+ARG DEPS_FROM_REF
 ARG PIO_PLATFORM
 
 RUN git clone --depth 1 --recurse-submodules --shallow-submodules \
