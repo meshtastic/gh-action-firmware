@@ -17,12 +17,6 @@ export PLATFORMIO_SETTING_ENABLE_TELEMETRY=0
 export PLATFORMIO_SETTING_CHECK_PLATFORMIO_INTERVAL=3650
 export PLATFORMIO_SETTING_CHECK_PRUNE_SYSTEM_THRESHOLD=10240
 
-# pioarduino uses uv with --force-reinstall unconditionally.
-# https://github.com/pioarduino/platform-espressif32/blob/55.03.39/builder/penv_setup.py#L584-L588
-# Use "offline" mode to prevent uv from trying to re-download at firmware build time.
-export UV_OFFLINE=1
-# This might break when updating pioarduino...
-
 # Use PlatformIO Token if provided.
 if [[ -n "${PIO_TOKEN}" ]]; then
     export PLATFORMIO_AUTH_TOKEN="${PIO_TOKEN}"

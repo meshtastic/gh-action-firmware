@@ -36,6 +36,11 @@ COPY ./bin/pio_load_and_dedupe.sh /pio_load_and_dedupe.sh
 RUN /pio_load_and_dedupe.sh ${PIO_PLATFORM}
 # RUN platformio pkg install -e native-tft
 
+# Drop `--force-reinstall` from the espressif32 platform's esptool install so it
+# stops re-fetching (and occasionally timing out) at firmware-build time.
+COPY ./bin/patch-esp32_uv_reinstall.sh /patch-esp32_uv_reinstall.sh
+RUN /patch-esp32_uv_reinstall.sh
+
 # Builder image
 FROM base
 LABEL org.opencontainers.image.authors="vidplace7"
