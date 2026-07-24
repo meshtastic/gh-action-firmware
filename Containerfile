@@ -1,3 +1,5 @@
+# syntax=docker/dockerfile:1
+
 # Base image
 # !! espressif32 platform does not yet support python 3.14
 FROM python:3.13-trixie AS base
@@ -34,18 +36,18 @@ WORKDIR /deps
 
 COPY ./bin/pio_load_and_dedupe.sh /pio_load_and_dedupe.sh
 RUN /pio_load_and_dedupe.sh ${PIO_PLATFORM}
-# RUN platformio pkg install -e native-tft
-
-# Drop `--force-reinstall` from the espressif32 platform's esptool install so it
-# stops re-fetching (and occasionally timing out) at firmware-build time.
-COPY ./bin/patch-esp32_uv_reinstall.sh /patch-esp32_uv_reinstall.sh
-RUN /patch-esp32_uv_reinstall.sh
 
 # Builder image
 FROM base
 LABEL org.opencontainers.image.authors="vidplace7"
 
-COPY --from=pio_deps /pio /pio
+# /pio is heavily hardlinked by jdupes (see bin/pio_load_and_dedupe.sh) to shrink
+# it. A plain `COPY --from` flattens every hardlink back into a full copy, undoing
+# the dedup in the final image. Stream through tar over a bind mount instead: tar
+# preserves hardlinks (and symlinks), and the bind mount means no intermediate
+# tarball is ever written to a layer.
+RUN --mount=type=bind,from=pio_deps,source=/pio,target=/mnt/pio \
+    mkdir -p /pio && tar -C /mnt/pio -cf - . | tar -C /pio -xf -
 
 WORKDIR /workspace
 RUN git config --global --add safe.directory /workspace
