@@ -24,6 +24,9 @@ ENV PLATFORMIO_WORKSPACE_DIR=/pio/workspace
 ENV PLATFORMIO_SETTING_ENABLE_TELEMETRY=0
 ENV CI=true
 
+# Set UV_LINK_MODE to copy (it creates hardlinks by default)
+ENV UV_LINK_MODE=copy
+
 # Gather PlatformIO dependencies in a separate stage
 FROM base AS pio_deps
 ARG DEPS_FROM_REPO="https://github.com/meshtastic/firmware.git"
