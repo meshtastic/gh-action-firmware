@@ -37,6 +37,27 @@ runs:
   steps:
     - id: build_meshtastic
       run: |
+        set -euo pipefail
+
+        # `docker run` alone defaults to --pull=missing, so a runner that already has
+        # this (mutable) tag cached keeps using it indefinitely and a republished image
+        # never reaches the build. Pull explicitly: it is a cheap manifest check when the
+        # local copy is already current, and correct when it is not. Tolerate a failed
+        # pull so a registry blip falls back to the cached image rather than failing the
+        # build outright.
+        if ! docker pull --quiet "$MT_IMAGE"; then
+          echo "::warning::docker pull failed for $MT_IMAGE - falling back to the locally cached image"
+        fi
+
+        # Record which image actually ran. Without this the image vintage is invisible in
+        # the logs, so a container-side regression cannot be told apart from a code-side
+        # one when triaging a failed build.
+        echo "::group::Container image"
+        docker image inspect "$MT_IMAGE" \
+          --format 'image:   {{index .RepoDigests 0}}{{"\n"}}created: {{.Created}}{{"\n"}}rev:     {{index .Config.Labels "org.opencontainers.image.revision"}}' \
+          || echo "could not inspect $MT_IMAGE"
+        echo "::endgroup::"
+
         docker run --rm \
           --env GITHUB_ACTIONS \
           --env XDG_CACHE_HOME \
@@ -47,9 +68,10 @@ runs:
           --env MT_VERBOSE \
           --env PIO_TOKEN \
           -v $GITHUB_WORKSPACE:/workspace \
-          ghcr.io/meshtastic/gh-action-firmware:${{ inputs.meshtastic_branch }}-${{ inputs.pio_platform }}
+          "$MT_IMAGE"
       shell: bash
       env:
+        MT_IMAGE: ghcr.io/meshtastic/gh-action-firmware:${{ inputs.meshtastic_branch }}-${{ inputs.pio_platform }}
         PLATFORMIO_BUILD_DIR: /workspace/.pio/build
         MT_ENV: ${{ inputs.pio_env }}
         MT_PLATFORM: ${{ inputs.pio_platform }}
