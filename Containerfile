@@ -49,8 +49,18 @@ LABEL org.opencontainers.image.authors="vidplace7"
 # the dedup in the final image. Stream through tar over a bind mount instead: tar
 # preserves hardlinks (and symlinks), and the bind mount means no intermediate
 # tarball is ever written to a layer.
-RUN --mount=type=bind,from=pio_deps,source=/pio,target=/mnt/pio \
-    mkdir -p /pio && tar -C /mnt/pio -cf - . | tar -C /pio -xf -
+RUN --mount=type=bind,from=pio_deps,source=/pio/workspace,target=/mnt/pio-workspace \
+    mkdir -p /pio/workspace && tar -C /mnt/pio-workspace -cf - . | tar -C /pio/workspace -xf -
+# For esp32 the packages/penv are provided elsewhere, so only the uv/esptool cache
+# under /pio/core/.cache is needed (see UV_CACHE_DIR in bin/pio_load_and_dedupe.sh).
+# For every other platform, copy the whole /pio/core. Bind-mount all of /pio/core
+# so the mount source always exists regardless of which branch runs.
+ARG PIO_PLATFORM
+RUN --mount=type=bind,from=pio_deps,source=/pio/core,target=/mnt/pio-core \
+    case "$PIO_PLATFORM" in \
+      esp32*) mkdir -p /pio/core/.cache && tar -C /mnt/pio-core/.cache -cf - . | tar -C /pio/core/.cache -xf - ;; \
+      *) mkdir -p /pio/core && tar -C /mnt/pio-core -cf - . | tar -C /pio/core -xf - ;; \
+    esac
 
 WORKDIR /workspace
 RUN git config --global --add safe.directory /workspace
