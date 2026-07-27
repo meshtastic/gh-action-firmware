@@ -12,3 +12,7 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+    ignore:
+      - dependency-name: "grpcio-tools"
+        # Ignore updates until 2.x is released.
+        versions: ["<2"]
