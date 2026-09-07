@@ -14,8 +14,13 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Python dependencies
-COPY requirements.txt /tmp/requirements.txt
-RUN pip install -r /tmp/requirements.txt
+# ESP32 targets build against pioarduino, everything else against upstream platformio.
+ARG PIO_PLATFORM
+COPY requirements_*.txt /tmp/
+RUN case "${PIO_PLATFORM}" in \
+    esp32*) pip install -r /tmp/requirements_pioarduino.txt ;; \
+    *) pip install -r /tmp/requirements_platformio.txt ;; \
+    esac
 
 # PlatformIO Configuration
 ENV PLATFORMIO_CORE_DIR=/pio/core

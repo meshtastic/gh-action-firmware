@@ -1,4 +1,3 @@
-platformio==6.1.19
 nanopb==0.4.9.1
 adafruit-nrfutil==0.5.3.post16
 meshtastic==2.7.11
