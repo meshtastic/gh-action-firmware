@@ -5,12 +5,19 @@ FROM python:3.14-trixie AS base
 ENV PIP_ROOT_USER_ACTION=ignore
 ENV DEBIAN_FRONTEND=noninteractive
 
+# Deb-multimedia repository (provides libpcre3)
+RUN echo 'deb https://www.deb-multimedia.org trixie main' > /etc/apt/sources.list.d/deb-multimedia.list \
+    && apt-get -o Acquire::AllowInsecureRepositories=true update \
+    && apt-get install -y --no-install-recommends --allow-unauthenticated deb-multimedia-keyring \
+    && rm -rf /var/lib/apt/lists/*
+
 # Apt dependencies
 RUN apt-get update && apt-get install -y \
     jq jdupes build-essential \
     libgpiod-dev libyaml-cpp-dev libbluetooth-dev libusb-1.0-0-dev libi2c-dev libuv1-dev \
     libx11-dev libinput-dev libxkbcommon-x11-dev \
     openssl libssl-dev libulfius-dev liborcania-dev \
+    libpcre3-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Python dependencies
