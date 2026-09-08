@@ -13,11 +13,16 @@ to_build=$(
 
 echo "Gathering environments for platform: $PLATFORM_SRC"
 
-TOOL_FLAGS="--tool platformio/tool-cppcheck --tool platformio/tool-mklittlefs"
-# Preload additional tools on ESP32 platforms
-if [[ "$PLATFORM_SRC" == esp32* ]]; then
-    TOOL_FLAGS="$TOOL_FLAGS --tool https://github.com/pioarduino/scons/releases/download/4.8.1/scons-local-4.8.1.tar.gz"
-fi
+TOOL_FLAGS="--tool platformio/tool-mklittlefs"
+# Preload additional tools (platform dependent)
+case "$PLATFORM_SRC" in
+    esp32*)
+        TOOL_FLAGS="$TOOL_FLAGS --tool https://github.com/pioarduino/scons/releases/download/4.8.1/scons-local-4.8.1.tar.gz"
+        ;;
+    *)
+        TOOL_FLAGS="$TOOL_FLAGS --tool platformio/tool-cppcheck"
+        ;;
+esac
 
 echo "$to_build" | while read -r env; do
     echo "################################################"
