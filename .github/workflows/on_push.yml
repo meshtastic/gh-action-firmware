@@ -28,12 +28,17 @@ jobs:
           - esp32s3
           - native
           - nrf52840
+          - nrf54l15
           - rp2040
           - rp2350
           - stm32
         mt_branch:
           - master
           - develop
+        exclude:
+          # nrf54l15 support only exists on develop
+          - pio_platform: nrf54l15
+            mt_branch: master
     uses: ./.github/workflows/docker_manifest.yml
     with:
       pio_platform: ${{ matrix.pio_platform }}
