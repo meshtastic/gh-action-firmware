@@ -28,6 +28,7 @@ jobs:
           - esp32s3
           - native
           - nrf52840
+          - nrf54l15
           - rp2040
           - rp2350
           - stm32
