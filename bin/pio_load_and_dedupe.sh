@@ -13,14 +13,15 @@ to_build=$(
 
 echo "Gathering environments for platform: $PLATFORM_SRC"
 
-TOOL_FLAGS="--tool platformio/tool-mklittlefs"
+TOOL_FLAGS=(--tool platformio/tool-mklittlefs)
 # Preload additional tools (platform dependent)
 case "$PLATFORM_SRC" in
     esp32*)
-        TOOL_FLAGS="$TOOL_FLAGS --tool https://github.com/pioarduino/scons/releases/download/4.8.1/scons-local-4.8.1.tar.gz"
+        TOOL_FLAGS+=(--tool https://github.com/pioarduino/scons/releases/download/4.8.1/scons-local-4.8.1.tar.gz)
         ;;
     *)
-        TOOL_FLAGS="$TOOL_FLAGS --tool platformio/tool-cppcheck"
+        # Remove version pin after PlatformIO 6.2.1 release
+        TOOL_FLAGS+=(--tool "platformio/tool-cppcheck@1.22100.0")
         ;;
 esac
 
@@ -32,7 +33,7 @@ echo "$to_build" | while read -r env; do
     pio pkg install --environment "$env"
     # Install additional tools
     # `--no-save` prevents this from modifying platformio.ini
-    pio pkg install --environment "$env" --no-save $TOOL_FLAGS
+    pio pkg install --environment "$env" --no-save "${TOOL_FLAGS[@]}"
 done
 echo "All packages loaded successfully."
 
