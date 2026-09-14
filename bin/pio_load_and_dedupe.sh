@@ -17,11 +17,12 @@ TOOL_FLAGS=(--tool platformio/tool-mklittlefs)
 # Preload additional tools (platform dependent)
 case "$PLATFORM_SRC" in
     esp32*)
+        # Updated with pioarduino-core releases
         TOOL_FLAGS+=(--tool https://github.com/pioarduino/scons/releases/download/4.8.1/scons-local-4.8.1.tar.gz)
         ;;
     *)
-        # Remove version pin after PlatformIO 6.2.1 release
-        TOOL_FLAGS+=(--tool "platformio/tool-cppcheck@1.22100.0")
+        # Updated with platformio-core releases
+        TOOL_FLAGS+=(--tool "platformio/tool-cppcheck@~1.21100.0")
         ;;
 esac
 

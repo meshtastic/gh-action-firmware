@@ -1,2 +1,4 @@
 -r requirements_base.txt
+# Update $TOOL_FLAGS in bin/pio_load_and_dedupe.sh
+# when updating platformio
 platformio==6.2.0
