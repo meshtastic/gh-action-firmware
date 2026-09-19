@@ -18,7 +18,7 @@ TOOL_FLAGS=(--tool platformio/tool-mklittlefs)
 case "$PLATFORM_SRC" in
     esp32*)
         # Updated with pioarduino-core releases
-        TOOL_FLAGS+=(--tool https://github.com/pioarduino/scons/releases/download/4.8.1/scons-local-4.8.1.tar.gz)
+        TOOL_FLAGS+=(--tool https://github.com/pioarduino/registry/releases/download/0.0.1/scons-4.11.1.zip)
         ;;
     *)
         # Updated with platformio-core releases
