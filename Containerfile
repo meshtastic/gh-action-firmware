@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # Base image
-FROM python:3.14-trixie AS base
+FROM astral/uv:python3.14-trixie AS base
 ENV PIP_ROOT_USER_ACTION=ignore
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -21,12 +21,21 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Python dependencies
+COPY requirements_*.txt constraints.txt /tmp/
+# UV Configuration
+# Set constraints for UV and pip installations
+# ensures that the pioarduino 'penv' respects our version choices.
+ENV UV_CONSTRAINT=/tmp/constraints.txt
+ENV PIP_CONSTRAINT=/tmp/constraints.txt
+# Set UV_LINK_MODE to copy (it creates hardlinks by default)
+ENV UV_LINK_MODE=copy
 # ESP32 targets build against pioarduino, everything else against upstream platformio.
 ARG PIO_PLATFORM
-COPY requirements_*.txt /tmp/
 RUN case "${PIO_PLATFORM}" in \
-    esp32*) pip install -r /tmp/requirements_pioarduino.txt ;; \
-    *) pip install -r /tmp/requirements_platformio.txt ;; \
+    esp32*) \
+      uv pip install --system -r /tmp/requirements_pioarduino.txt ;; \
+    *) \
+      uv pip install --system -r /tmp/requirements_platformio.txt ;; \
     esac
 
 # PlatformIO Configuration
@@ -34,9 +43,6 @@ ENV PLATFORMIO_CORE_DIR=/pio/core
 ENV PLATFORMIO_WORKSPACE_DIR=/pio/workspace
 ENV PLATFORMIO_SETTING_ENABLE_TELEMETRY=0
 ENV CI=true
-
-# Set UV_LINK_MODE to copy (it creates hardlinks by default)
-ENV UV_LINK_MODE=copy
 
 # Gather PlatformIO dependencies in a separate stage
 FROM base AS pio_deps
