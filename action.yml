@@ -31,7 +31,6 @@ inputs:
     description: The Meshtastic branch (container) to use for the build.
     required: false
     default: develop
-
 runs:
   using: composite
   steps:
@@ -57,6 +56,8 @@ runs:
           --format 'image:   {{index .RepoDigests 0}}{{"\n"}}created: {{.Created}}{{"\n"}}rev:     {{index .Config.Labels "org.opencontainers.image.revision"}}' \
           || echo "could not inspect $MT_IMAGE"
         echo "::endgroup::"
+      env:
+        MT_IMAGE: ghcr.io/meshtastic/gh-action-firmware:${{ inputs.meshtastic_branch }}-${{ inputs.pio_platform }}
 
     - name: Build
       id: build_meshtastic
