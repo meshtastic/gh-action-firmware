@@ -33,7 +33,7 @@ jobs:
           - rp2350
           - stm32
         mt_branch:
-          - master
+          # - master # Disabled for now (inactive)
           - develop
         exclude:
           # nrf54l15 support only exists on develop

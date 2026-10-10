@@ -1,0 +1,3 @@
+# Enforce a minimum PlatformIO / pioarduino version
+pioarduino>=6.2.0
+platformio>=6.2.0
