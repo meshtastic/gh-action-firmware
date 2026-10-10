@@ -18,7 +18,7 @@ TOOL_FLAGS=(--tool platformio/tool-mklittlefs)
 case "$PLATFORM_SRC" in
     esp32*)
         # Updated with pioarduino-core releases
-        TOOL_FLAGS+=(--tool https://github.com/pioarduino/registry/releases/download/0.0.1/scons-4.11.1.zip)
+        #TOOL_FLAGS+=(--tool https://github.com/pioarduino/registry/releases/download/0.0.1/scons-4.11.1.zip)
         ;;
     *)
         # Updated with platformio-core releases
@@ -44,8 +44,9 @@ if [[ "$PLATFORM_SRC" != esp32* ]]; then
     jdupes --quiet -r -L "$PLATFORMIO_CORE_DIR"
 fi
 
-# Replace duplicate files in the workspace directory with hard links
-echo "Deduplicating $PLATFORMIO_WORKSPACE_DIR"
-jdupes --quiet -r -L "$PLATFORMIO_WORKSPACE_DIR"
+# Workspace caching removed for now
+# # Replace duplicate files in the workspace directory with hard links
+# echo "Deduplicating $PLATFORMIO_WORKSPACE_DIR"
+# jdupes --quiet -r -L "$PLATFORMIO_WORKSPACE_DIR"
 
 echo "Deduplication complete."
