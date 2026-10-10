@@ -35,10 +35,10 @@ inputs:
 runs:
   using: composite
   steps:
-    - id: build_meshtastic
+    - name: Setup
+      id: setup
+      shell: bash
       run: |
-        set -euo pipefail
-
         # `docker run` alone defaults to --pull=missing, so a runner that already has
         # this (mutable) tag cached keeps using it indefinitely and a republished image
         # never reaches the build. Pull explicitly: it is a cheap manifest check when the
@@ -58,6 +58,12 @@ runs:
           || echo "could not inspect $MT_IMAGE"
         echo "::endgroup::"
 
+    - name: Build
+      id: build_meshtastic
+      shell: bash
+      run: |
+        set -euo pipefail
+
         docker run --rm \
           --env GITHUB_ACTIONS \
           --env XDG_CACHE_HOME \
@@ -69,7 +75,6 @@ runs:
           --env PIO_TOKEN \
           -v $GITHUB_WORKSPACE:/workspace \
           "$MT_IMAGE"
-      shell: bash
       env:
         MT_IMAGE: ghcr.io/meshtastic/gh-action-firmware:${{ inputs.meshtastic_branch }}-${{ inputs.pio_platform }}
         PLATFORMIO_BUILD_DIR: /workspace/.pio/build

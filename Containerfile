@@ -66,10 +66,11 @@ LABEL org.opencontainers.image.authors="vidplace7"
 # the dedup in the final image. Stream through tar over a bind mount instead: tar
 # preserves hardlinks (and symlinks), and the bind mount means no intermediate
 # tarball is ever written to a layer.
-RUN --mount=type=bind,from=pio_deps,source=/pio/workspace,target=/mnt/pio-workspace \
-    mkdir -p /pio/workspace && tar -C /mnt/pio-workspace -cf - . | tar -C /pio/workspace -xf -
 RUN --mount=type=bind,from=pio_deps,source=/pio/core,target=/mnt/pio-core \
     mkdir -p /pio/core && tar -C /mnt/pio-core -cf - . | tar -C /pio/core -xf -
+# Workspace caching removed for now
+# RUN --mount=type=bind,from=pio_deps,source=/pio/workspace,target=/mnt/pio-workspace \
+#     mkdir -p /pio/workspace && tar -C /mnt/pio-workspace -cf - . | tar -C /pio/workspace -xf -
 
 WORKDIR /workspace
 RUN git config --global --add safe.directory /workspace
