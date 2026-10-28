@@ -1,4 +1,5 @@
 -r requirements_base.txt
 # Update $TOOL_FLAGS in bin/pio_load_and_dedupe.sh
-# when updating pioarduino
+# when updating pioarduino.
+# ...also don't forget to update constraints.txt.
 pioarduino==6.2.0
