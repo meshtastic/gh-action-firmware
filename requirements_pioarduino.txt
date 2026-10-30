@@ -2,4 +2,4 @@
 # Update $TOOL_FLAGS in bin/pio_load_and_dedupe.sh
 # when updating pioarduino.
 # ...also don't forget to update constraints.txt.
-pioarduino==6.2.0
+pioarduino==6.2.0.post1
